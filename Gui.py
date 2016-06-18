@@ -25,18 +25,23 @@ class Gui(Frame):
         self.text2.insert(END, 'logs')
         self.label3 = Label(self.row2, text="Entry:")
         self.text3 = Entry(self.row2, width=25)
+        self.text3.bind("<Return>", self.logEntry2)
         self.enterButton = Button(self.row2, text="Enter", command=self.logEntry)
         self.time = Label(self.row3, text="[time]")
-        self.message = Label(self.row3, text="[message]")
+        self.message = Label(self.row3, text="")
         self.label1.pack(side="left")
         self.text1.pack(side="left")
         self.label2.pack(side="left")
         self.text2.pack(side="left")
         self.label3.pack(side="left")
         self.text3.pack(side="left")
+        #self.text3.focus()
+        #TODO put this after putting some sort of save location settings
         self.enterButton.pack(side="left")
         self.time.pack(side="left")
         self.message.pack(side="left")
+    def logEntry2(self, event):
+        self.logEntry()
     def logEntry(self):
         try:
             path = str(self.text1.get())
