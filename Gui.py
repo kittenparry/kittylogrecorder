@@ -1,34 +1,32 @@
-from tkinter import *
-from threading import *
-from time import strftime, sleep
+import tkinter as tk
+import threading as threading
+import time
 
-class Gui(Frame):
+class Gui(tk.Frame):
     def __init__(self, master=None):
-        Frame.__init__(self, master)
+        tk.Frame.__init__(self, master)
         self.x = 1
-        self.row1 = Frame(master)
-        self.row2 = Frame(master)
-        self.row3 = Frame(master)
+        self.row1 = tk.Frame(master)
+        self.row2 = tk.Frame(master)
+        self.row3 = tk.Frame(master)
         self.row1.grid(row=0, column=0)
         self.row2.grid(row=1, column=0)
         self.row3.grid(row=2, column=0)
         self.addElements()
         self.setTime()
-        #self.t = Timer()
-        #self.t.start()
     def addElements(self):
-        self.label1 = Label(self.row1, text="Directory:")
-        self.text1 = Entry(self.row1, width=50)
-        self.text1.insert(END, 'C:\\')
-        self.label2 = Label(self.row2, text="Filename:")
-        self.text2 = Entry(self.row2, width=10)
-        self.text2.insert(END, 'logs')
-        self.label3 = Label(self.row2, text="Entry:")
-        self.text3 = Entry(self.row2, width=25)
+        self.label1 = tk.Label(self.row1, text="Directory:")
+        self.text1 = tk.Entry(self.row1, width=50)
+        self.text1.insert(tk.END, 'C:\\')
+        self.label2 = tk.Label(self.row2, text="Filename:")
+        self.text2 = tk.Entry(self.row2, width=10)
+        self.text2.insert(tk.END, 'logs')
+        self.label3 = tk.Label(self.row2, text="Entry:")
+        self.text3 = tk.Entry(self.row2, width=25)
         self.text3.bind("<Return>", self.logEntry2)
-        self.enterButton = Button(self.row2, text="Enter", command=self.logEntry)
-        self.time = Label(self.row3, text="[time]")
-        self.message = Label(self.row3, text="")
+        self.enterButton = tk.Button(self.row2, text="Enter", command=self.logEntry)
+        self.time = tk.Label(self.row3, text="[time]")
+        self.message = tk.Label(self.row3, text="")
         self.label1.pack(side="left")
         self.text1.pack(side="left")
         self.label2.pack(side="left")
@@ -70,18 +68,14 @@ class Gui(Frame):
         except IOError:
             self.message.config(text="|| Error. Directory doesn't exist.")
     def getTime(self):
-        return strftime("%Y.%m.%d %H:%M:%S")
+        return time.strftime("%Y.%m.%d %H:%M:%S")
     def setTime(self):
         self.time.config(text=self.getTime())
+        self.after(333, self.setTime)
 
-#TODO timer
-class Timer(Thread):
-    def run(self):
-        for _ in range(999999999999):
-            Gui.setTime(Gui)
-            sleep(0.5)
-root = Tk()
-root.title("Log Recorder")
-app = Gui(master=root)
-root.geometry("370x85+0+100")
-app.mainloop()
+if __name__ == '__main__':
+    root = tk.Tk()
+    root.title("Log Recorder")
+    root.geometry("370x85+0+100")
+    app = Gui(master=root)
+    app.mainloop()
