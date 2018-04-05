@@ -1,5 +1,4 @@
 import tkinter as tk
-import threading as threading
 import time
 
 class Gui(tk.Frame):
@@ -17,10 +16,12 @@ class Gui(tk.Frame):
     def addElements(self):
         self.label1 = tk.Label(self.row1, text="Directory:")
         self.text1 = tk.Entry(self.row1, width=50)
-        self.text1.insert(tk.END, 'C:\\')
+        self.text1.insert(tk.END, 'C:\\Users\\Public')
+        self.text1.configure(state='readonly')
         self.label2 = tk.Label(self.row2, text="Filename:")
         self.text2 = tk.Entry(self.row2, width=10)
-        self.text2.insert(tk.END, 'logs')
+        self.text2.insert(tk.END, 'someFile')
+        self.text2.configure(state='readonly')
         self.label3 = tk.Label(self.row2, text="Entry:")
         self.text3 = tk.Entry(self.row2, width=25)
         self.text3.bind("<Return>", self.logEntry2)
@@ -33,8 +34,7 @@ class Gui(tk.Frame):
         self.text2.pack(side="left")
         self.label3.pack(side="left")
         self.text3.pack(side="left")
-        #self.text3.focus()
-        #TODO put this after putting some sort of save location settings
+        self.text3.focus()
         self.enterButton.pack(side="left")
         self.time.pack(side="left")
         self.message.pack(side="left")
@@ -76,6 +76,7 @@ class Gui(tk.Frame):
 if __name__ == '__main__':
     root = tk.Tk()
     root.title("Log Recorder")
-    root.geometry("370x85+0+100")
+    #edit below for window spawn position
+    root.geometry("370x75+100+0")
     app = Gui(master=root)
     app.mainloop()
