@@ -1,9 +1,6 @@
-# Kitten's Log Recorder
-Save your personal logs, diary entries to a text file with a timedate stamp.
+# Log Recorder
+A basic program which allows you to write into a designated text file with timestamps.
 
-Current issues:
-- Can't save output file to C:\ directly (eg. output file can still be saved to C:\folder)
-- One has to enter their details each time they launch the file
+![](https://user-images.githubusercontent.com/12991847/38353646-bada09de-38bf-11e8-802e-0fdcb7989222.png)
 
-Fixed issues:
-- Timer not showing up correctly on Gui.
+You need to enter file location and file name beforehand for the program to work for your needs. Default file path is `C:\Users\Public\someFile.txt`. You can also enable editing of the directory and filename fields if need be.
