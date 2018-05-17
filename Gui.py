@@ -25,6 +25,8 @@ class Gui(tk.Frame):
         self.label3 = tk.Label(self.row2, text="Entry:")
         self.text3 = tk.Entry(self.row2, width=25)
         self.text3.bind("<Return>", self.logEntry2)
+        #TODO: fix the cursor leaving the whole words behind using ctrl + right arrow to navigate
+        #self.text3.configure(..)
         self.enterButton = tk.Button(self.row2, text="Enter", command=self.logEntry)
         self.time = tk.Label(self.row3, text="[time]")
         self.message = tk.Label(self.row3, text="")
