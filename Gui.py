@@ -1,5 +1,4 @@
 import tkinter as tk
-#from tkinter import ttk
 import time
 
 class Gui(tk.Frame):
@@ -24,18 +23,10 @@ class Gui(tk.Frame):
         self.entry_fname = tk.Entry(self.row3, width=10)
         self.entry_fname.insert(tk.END, self.str_fname_name)
         self.entry_fname.configure(state='readonly')
-        #self.label3 = tk.Label(self.row3, text="Entry:")
-        #OLD ENTRY
-        #self.text3 = tk.Entry(self.row2, width=25)
-        #self.text3.bind("<Return>", self.logEntry2)
         self.text_entry = tk.Text(self.row1, width=30, height=5, wrap='word')
         self.text_entry.bind("<Return>", self.log_entry_event)
         self.scrolly = tk.Scrollbar(self.row1, orient='vertical', command=self.text_entry.yview)
         self.text_entry.configure(yscrollcommand=self.scrolly.set)
-        #TODO: fix the cursor leaving the whole words behind using ctrl + right arrow to navigate
-        #self.text3.configure(..)
-        #MONOSPACE TEST
-        #self.text3.configure(style="Courier.TLabel")
         self.button_enter = tk.Button(self.row3, text=self.str_button_enter, command=self.log_entry)
         self.label_time = tk.Label(self.row2, text="")
         self.label_message = tk.Label(self.row2, text="")
@@ -66,8 +57,7 @@ class Gui(tk.Frame):
                 self.label_message.config(text=self.str_err_cpath)
             else:
                 fw = open(wp, 'a')
-                #msg = self.getTime() + "| " + str(self.text3.get()) + "\n"
-                msg = self.get_time() + "| " + str(self.text_entry.get('1.0', 'end'))# + "\n"
+                msg = self.get_time() + "| " + str(self.text_entry.get('1.0', 'end'))
                 fw.write(msg)
                 if self.x > 1:
                     self.label_message.config(text=self.str_logged1)
@@ -76,7 +66,6 @@ class Gui(tk.Frame):
                     self.label_message.config(text=self.str_logged2)
                     self.x += 1
                 fw.close()
-                #self.text3.delete(0,'end')
                 self.text_entry.delete('1.0', 'end')
         except IOError:
             self.label_message.config(text=self.str_err_io)
@@ -85,10 +74,6 @@ class Gui(tk.Frame):
     def set_time(self):
         self.label_time.config(text=self.get_time())
         self.after(333, self.set_time)
-    #FOCUS TEST
-    #def focus_text3(self, event):
-    #    if event.widget == root:
-    #        self.text3.focus_set()
     def strings(self):
         self.str_dir = "Dir:"
         self.str_dir_path = "Other"
@@ -104,11 +89,6 @@ if __name__ == '__main__':
     root = tk.Tk()
     root.title("Log Recorder")
     #edit below for window spawn position
-    root.geometry("275x165+100+0")
+    root.geometry("275x165+94+0")
     app = Gui(master=root)
-    #FOCUS TEST
-    #root.bind("<FocusIn>", Gui.focus_text3)
-    #MONOSPACE TEST
-    #style = ttk.Style()
-    #style.configure("Courier.TButton", font=("Courier", 16))
     app.mainloop()
