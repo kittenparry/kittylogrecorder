@@ -23,20 +23,20 @@ class Gui(tk.Frame):
         self.entry_fname = tk.Entry(self.row3, width=10)
         self.entry_fname.insert(tk.END, self.str_fname_name)
         self.entry_fname.configure(state='readonly')
-        self.text_entry = tk.Text(self.row1, width=30, height=5, wrap='word')
+        self.text_entry = tk.Text(self.row2, width=30, height=5, wrap='word')
         self.text_entry.bind("<Return>", self.log_entry_event)
-        self.scrolly = tk.Scrollbar(self.row1, orient='vertical', command=self.text_entry.yview)
+        self.scrolly = tk.Scrollbar(self.row2, orient='vertical', command=self.text_entry.yview)
         self.text_entry.configure(yscrollcommand=self.scrolly.set)
         self.button_enter = tk.Button(self.row3, text=self.str_button_enter, command=self.log_entry)
-        self.label_time = tk.Label(self.row2, text="")
-        self.label_message = tk.Label(self.row2, text="")
+        self.label_time = tk.Label(self.row1, text="")
+        self.label_message = tk.Label(self.row1, text="")
         self.els = [self.label_dir, self.entry_dir, self.label_fname, self.entry_fname,
                     self.text_entry, self.button_enter]
         self.els2 = [self.label_time, self.label_message]
         for e in self.els:
             e.pack(side="left", padx=4, pady=5)
         for e in self.els2:
-            e.pack(side="left")
+            e.pack(side="left", pady=2)
         self.scrolly.pack(side="left", fill="y")
         self.text_entry.focus()
     def log_entry_event(self, event):
