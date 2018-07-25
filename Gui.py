@@ -29,8 +29,7 @@ class Gui(tk.Frame):
         self.label_time = tk.Label(self.row1, text="")
         self.label_message = tk.Label(self.row1, text="")
         self.els = [self.label_time, self.label_message, self.label_dir, self.entry_dir,
-                    self.label_fname, self.entry_fname,
-                    self.text_entry, self.button_enter]
+                    self.label_fname, self.entry_fname, self.text_entry, self.button_enter]
         for e in self.els:
             e.pack(side="left", pady=2, padx=1)
         self.scrolly.pack(side="left", fill="y")
@@ -77,14 +76,13 @@ class Gui(tk.Frame):
         self.str_fname_name = "myLogs"
         self.str_button_enter = "Enter"
         self.str_err_cpath = "|| Error. Can't write to C:\ alone.\n|| Put a folder or change the drive."
-        self.str_logged1 = "|| Logged!"
-        self.str_logged2 = "|| Logged."
+        self.str_logged1 = "|| Logged!!"
+        self.str_logged2 = "|| Logged.."
         self.str_err_io = "|| Error. Directory doesn't exist."
 
 if __name__ == '__main__':
     root = tk.Tk()
     root.title("Log Recorder")
-    #edit below for window spawn position
     root.geometry("435x115+94+0")
     app = Gui(master=root)
     app.mainloop()
