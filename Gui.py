@@ -7,36 +7,31 @@ class Gui(tk.Frame):
         self.x = 1
         self.row1 = tk.Frame(master)
         self.row2 = tk.Frame(master)
-        self.row3 = tk.Frame(master)
         self.row1.grid(row=0, column=0)
-        self.row2.grid(row=1, column=0)
-        self.row3.grid(row=2, column=0)
+        self.row2.grid(row=1, column=0, sticky="ew", padx=(10,0))
         self.strings()
         self.add_elements()
         self.set_time()
     def add_elements(self):
-        self.label_dir = tk.Label(self.row3, text=self.str_dir)
-        self.entry_dir = tk.Entry(self.row3, width=10)
+        self.label_dir = tk.Label(self.row1, text=self.str_dir, state='disabled')
+        self.entry_dir = tk.Entry(self.row1, width=10)
         self.entry_dir.insert(tk.END, self.str_dir_path)
-        self.entry_dir.configure(state='readonly')
-        self.label_fname = tk.Label(self.row3, text=self.str_fname)
-        self.entry_fname = tk.Entry(self.row3, width=10)
+        self.entry_dir.configure(state='disabled')
+        self.label_fname = tk.Label(self.row1, text=self.str_fname, state='disabled')
+        self.entry_fname = tk.Entry(self.row1, width=10)
         self.entry_fname.insert(tk.END, self.str_fname_name)
-        self.entry_fname.configure(state='readonly')
-        self.text_entry = tk.Text(self.row2, width=30, height=5, wrap='word')
+        self.entry_fname.configure(state='disabled')
+        self.text_entry = tk.Text(self.row2, width=50, height=4, wrap='word')
         self.text_entry.bind("<Return>", self.log_entry_event)
         self.scrolly = tk.Scrollbar(self.row2, orient='vertical', command=self.text_entry.yview)
         self.text_entry.configure(yscrollcommand=self.scrolly.set)
-        self.button_enter = tk.Button(self.row3, text=self.str_button_enter, command=self.log_entry)
+        self.button_enter = tk.Button(self.row1, text=self.str_button_enter, command=self.log_entry)
         self.label_time = tk.Label(self.row1, text="")
         self.label_message = tk.Label(self.row1, text="")
-        self.els = [self.label_dir, self.entry_dir, self.label_fname, self.entry_fname,
-                    self.text_entry, self.button_enter]
-        self.els2 = [self.label_time, self.label_message]
+        self.els = [self.label_time, self.label_message, self.label_dir, self.entry_dir,
+                    self.label_fname, self.entry_fname, self.text_entry, self.button_enter]
         for e in self.els:
-            e.pack(side="left", padx=4, pady=5)
-        for e in self.els2:
-            e.pack(side="left", pady=2)
+            e.pack(side="left", pady=2, padx=1)
         self.scrolly.pack(side="left", fill="y")
         self.text_entry.focus()
     def log_entry_event(self, event):
@@ -81,14 +76,13 @@ class Gui(tk.Frame):
         self.str_fname_name = "myLogs"
         self.str_button_enter = "Enter"
         self.str_err_cpath = "|| Error. Can't write to C:\ alone.\n|| Put a folder or change the drive."
-        self.str_logged1 = "|| Entry logged.."
-        self.str_logged2 = "|| Entry logged."
+        self.str_logged1 = "|| Logged!!"
+        self.str_logged2 = "|| Logged.."
         self.str_err_io = "|| Error. Directory doesn't exist."
 
 if __name__ == '__main__':
     root = tk.Tk()
     root.title("Log Recorder")
-    #edit below for window spawn position
-    root.geometry("275x165+94+0")
+    root.geometry("435x115+94+0")
     app = Gui(master=root)
     app.mainloop()
