@@ -4,6 +4,7 @@ import time
 class Gui(tk.Frame):
 	def __init__(self, master=None):
 		tk.Frame.__init__(self, master)
+		#TODO: a true/false instead of this x
 		self.x = 1
 		self.row1 = tk.Frame(master)
 		self.row2 = tk.Frame(master)
@@ -28,7 +29,7 @@ class Gui(tk.Frame):
 		self.label_time = tk.Label(self.row1, text="")
 		self.label_message = tk.Label(self.row1, text="")
 		self.els = [self.label_time, self.label_message, self.label_dir, self.entry_dir,
-					self.label_fname, self.entry_fname, self.text_entry, self.button_enter]
+			self.label_fname, self.entry_fname, self.text_entry, self.button_enter]
 		for e in self.els:
 			e.pack(side="left", pady=2, padx=1)
 		self.scrolly.pack(side="left", fill="y")
@@ -48,7 +49,7 @@ class Gui(tk.Frame):
 			if path[len(path)-1:len(path)] == '\\' or path[len(path)-1:len(path)] == '/':
 				wp = path + file
 			else:
-				wp = path + "\\" + file
+				wp = path + "/" + file
 			#TODO C:\ folder fix
 			if wp[0:3] == "C:\\" and file == wp[3:len(wp)]:
 				self.label_message.config(text=strings("err_c_path"))
