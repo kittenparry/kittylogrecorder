@@ -72,23 +72,24 @@ class Gui(tk.Frame):
 		self.label_time.config(text=self.get_time())
 		self.after(333, self.set_time)
 
+dict_strings = {
+	"title": "Log Recorder",
+	"label_dir": "Dir:",
+	"path_dir": "Other",
+	"label_fname": "Name:",
+	"name_fname": "myLogs",
+	"button_enter": "Enter",
+	"err_c_path": "|| Error. Can't write to C:\ alone.\n|| Put a folder or change the drive.",
+	"err_io": "|| Error. Directory doesn't exist.",
+	"logged1": "|| Logged!!",
+	"logged2": "|| Logged..",
+}
 def strings(s):
-	str = {
-		"label_dir": "Dir:",
-		"path_dir": "Other",
-		"label_fname": "Name:",
-		"name_fname": "myLogs",
-		"button_enter": "Enter",
-		"err_c_path": "|| Error. Can't write to C:\ alone.\n|| Put a folder or change the drive.",
-		"err_io": "|| Error. Directory doesn't exist.",
-		"logged1": "|| Logged!!",
-		"logged2": "|| Logged..",
-	}
-	return str.get(s)
+	return dict_strings.get(s)
 
 if __name__ == '__main__':
 	root = tk.Tk()
-	root.title("Log Recorder")
+	root.title(strings("title"))
 	root.geometry("435x115+94+0")
 	app = Gui(master=root)
 	app.mainloop()
