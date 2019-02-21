@@ -93,7 +93,7 @@ if __name__ == '__main__':
 	root.title(strings("title"))
 	# bad solutions ahead
 	scr_w = 1920
-	pr_w = 390 
+	pr_w = 390
 	pos = (scr_w - pr_w) / 2
 	# end bad solutions
 	root.geometry("%dx115+%d+30" % (pr_w, pos))
