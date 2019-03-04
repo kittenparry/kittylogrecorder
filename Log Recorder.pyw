@@ -90,6 +90,7 @@ def strings(s):
 
 if __name__ == '__main__':
 	root = tk.Tk()
+	root.tk.call('tk', 'scaling', 1.3)
 	root.title(strings("title"))
 	# bad solutions ahead
 	scr_w = 1920
