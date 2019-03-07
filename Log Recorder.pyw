@@ -1,5 +1,6 @@
 import tkinter as tk
 import time
+import platform
 
 class Gui(tk.Frame):
 	def __init__(self, master=None):
@@ -49,21 +50,18 @@ class Gui(tk.Frame):
 				wp = path + file
 			else:
 				wp = path + "/" + file
-			#TODO C:\ folder fix
-			if wp[0:3] == "C:\\" and file == wp[3:len(wp)]:
-				self.label_message.config(text=strings("err_c_path"))
+
+			fw = open(wp, 'a')
+			msg = self.get_time() + "| " + str(self.text_entry.get('1.0', 'end'))
+			fw.write(msg)
+			if self.x > 1:
+				self.label_message.config(text=strings("logged1"))
+				self.x = 1
 			else:
-				fw = open(wp, 'a')
-				msg = self.get_time() + "| " + str(self.text_entry.get('1.0', 'end'))
-				fw.write(msg)
-				if self.x > 1:
-					self.label_message.config(text=strings("logged1"))
-					self.x = 1
-				else:
-					self.label_message.config(text=strings("logged2"))
-					self.x += 1
-				fw.close()
-				self.text_entry.delete('1.0', 'end')
+				self.label_message.config(text=strings("logged2"))
+				self.x += 1
+			fw.close()
+			self.text_entry.delete('1.0', 'end')
 		except IOError:
 			self.label_message.config(text=strings("err_io"))
 	def get_time(self):
@@ -87,15 +85,22 @@ dict_strings = {
 def strings(s):
 	return dict_strings.get(s)
 
+def get_geometry():
+	os = platform.system()
+	if os == 'Windows':
+		return "435x115+94+0"
+	# elif os == 'Linux', might as well use else to include OS X
+	else:
+		screen_width = 1920
+		program_width = 390
+		x_position = (screen_width - program_width) / 2
+		return ("%dx115+%d+30" % (program_width, x_position))
+
+
 if __name__ == '__main__':
 	root = tk.Tk()
 	root.tk.call('tk', 'scaling', 1.3)
 	root.title(strings("title"))
-	# bad solutions ahead
-	scr_w = 1920
-	pr_w = 390
-	pos = (scr_w - pr_w) / 2
-	# end bad solutions
-	root.geometry("%dx115+%d+30" % (pr_w, pos))
+	root.geometry(get_geometry())
 	app = Gui(master=root)
 	app.mainloop()
