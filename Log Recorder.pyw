@@ -5,8 +5,6 @@ import platform
 class Gui(tk.Frame):
 	def __init__(self, master=None):
 		tk.Frame.__init__(self, master)
-		#TODO: a true/false instead of this x
-		self.x = 1
 		self.row1 = tk.Frame(master)
 		self.row2 = tk.Frame(master)
 		self.row1.grid(row=0, column=0)
@@ -54,12 +52,6 @@ class Gui(tk.Frame):
 			fw = open(wp, 'a')
 			msg = self.get_time() + "| " + str(self.text_entry.get('1.0', 'end'))
 			fw.write(msg)
-			if self.x > 1:
-				self.label_message.config(text=strings("logged1"))
-				self.x = 1
-			else:
-				self.label_message.config(text=strings("logged2"))
-				self.x += 1
 			fw.close()
 			self.text_entry.delete('1.0', 'end')
 		except IOError:
@@ -79,8 +71,6 @@ dict_strings = {
 	"button_enter": "Enter",
 	"err_c_path": "|| Error. Can't write to C:\ alone.\n|| Put a folder or change the drive.",
 	"err_io": "|| Error. Directory doesn't exist.",
-	"logged1": "|| Logged!!",
-	"logged2": "|| Logged..",
 }
 def strings(s):
 	return dict_strings.get(s)
