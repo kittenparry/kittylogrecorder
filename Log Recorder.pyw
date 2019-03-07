@@ -84,6 +84,7 @@ class Gui(tk.Frame):
 			with open(log_path, 'a') as f:
 				f.write(log)
 			self.text_entry.delete('1.0', 'end')
+			self.label_message.config(text="")
 		except IOError:
 			self.label_message.config(text=strings("err_io"))
 
@@ -113,7 +114,8 @@ dict_strings = {
 	"path_dir": "Other",
 	"name_filename": "myLogs",
 }
-# returns the string value with the given key
+
+# returns the string value with given key
 def strings(s):
 	return dict_strings.get(s)
 
@@ -122,10 +124,10 @@ def strings(s):
 # note: I don't have access to OS X to see if it looks good or if it works
 # FIXME: assumes 1920 screen width for other OSes
 def get_geometry():
-	os = platform.system()
-	if os == 'Windows':
+	if platform.system() == 'Windows':
 		return "435x115+94+0"
-	# elif os == 'Linux', might as well use else to include OS X
+	# elif os == 'Linux'
+	# might as well use else to include OS X
 	else:
 		screen_width = 1920
 		program_width = 390
