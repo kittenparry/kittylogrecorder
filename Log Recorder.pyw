@@ -16,11 +16,11 @@ class Gui(tk.Frame):
 		self.label_dir = tk.Label(self.row1, text=strings("label_dir"), state='disabled')
 		self.entry_dir = tk.Entry(self.row1, width=10)
 		self.entry_dir.insert(tk.END, strings("path_dir"))
-		self.entry_dir.configure(state='disabled')
+		# self.entry_dir.configure(state='disabled')
 		self.label_fname = tk.Label(self.row1, text=strings("label_fname"), state='disabled')
 		self.entry_fname = tk.Entry(self.row1, width=10)
 		self.entry_fname.insert(tk.END, strings("name_fname"))
-		self.entry_fname.configure(state='disabled')
+		# self.entry_fname.configure(state='disabled')
 		self.text_entry = tk.Text(self.row2, width=50, height=4, wrap='word')
 		self.text_entry.bind("<Return>", self.log_entry_event)
 		self.scrolly = tk.Scrollbar(self.row2, orient='vertical', command=self.text_entry.yview)
@@ -28,8 +28,7 @@ class Gui(tk.Frame):
 		self.button_enter = tk.Button(self.row1, text=strings("button_enter"), command=self.log_entry)
 		self.label_time = tk.Label(self.row1, text="")
 		self.label_message = tk.Label(self.row1, text="")
-		self.els = [self.label_time, self.label_message, self.label_dir, self.entry_dir,
-			self.label_fname, self.entry_fname, self.text_entry, self.button_enter]
+		self.els = [self.label_time, self.label_message, self.text_entry, self.button_enter]
 		for e in self.els:
 			e.pack(side="left", pady=2, padx=1)
 		self.scrolly.pack(side="left", fill="y")
