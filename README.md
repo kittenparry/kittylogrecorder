@@ -1,6 +1,8 @@
 # Log Recorder
 A basic program which allows you to write into a designated text file with timestamps.
 
+![](https://raw.githubusercontent.com/kittenparry/log-recorder/master/screenshot_linux.png)
+
 ![](https://raw.githubusercontent.com/kittenparry/log-recorder/master/screenshot_windows.png)
 
 You need to edit directory and filename in `dict_strings` beforehand for the program to work for your needs. 
