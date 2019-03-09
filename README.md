@@ -11,6 +11,8 @@ A basic program which allows you to write into a designated text file with times
 
 ![](https://raw.githubusercontent.com/kittenparry/log-recorder/master/screenshot_windows.png)
 
+### Instructions
+
 You need to edit directory and filename in `dict_strings` beforehand for the program to work for your needs. 
 
 `path_dir`: directory path (`.` for the current directory)  
