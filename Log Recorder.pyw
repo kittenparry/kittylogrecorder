@@ -1,6 +1,8 @@
 import tkinter as tk
+from tkinter import messagebox
 import time
 import platform
+import os
 
 
 class Gui(tk.Frame):
@@ -26,14 +28,13 @@ class Gui(tk.Frame):
 		# enter button
 		self.button_enter = tk.Button(self.row_top, text=strings('button_enter'), command=self.log_entry)
 
-		# time and message labels
+		# time labels
 		self.label_time = tk.Label(self.row_top, text='')
-		self.label_message = tk.Label(self.row_top, text='')
 
 		# pack time, message, text area input and enter button
 		# don't pack directory and filename label/entries
 		# pack y-scrollbar separately
-		self.elements = [self.label_time, self.label_message, self.text_entry, self.button_enter]
+		self.elements = [self.label_time, self.text_entry, self.button_enter]
 		for el in self.elements:
 			el.pack(side='left', pady=2, padx=1)
 		self.scrolly.pack(side='left', fill='y')
@@ -54,6 +55,10 @@ class Gui(tk.Frame):
 			# currently the static values in the strings dictionary
 			path = strings('path_dir')
 			file = strings('name_filename')
+			# create the directory if it doesn't exist already and inform the user
+			if not os.path.exists(path):
+				os.makedirs(path)
+				messagebox.showinfo(strings('title_dir_create'), strings('msg_dir_create') % path)
 
 			# if filename doesn't end in .txt append it
 			# if path ends in backward or forward slash append filename to path
@@ -72,9 +77,8 @@ class Gui(tk.Frame):
 			with open(log_path, 'a') as f:
 				f.write(log)
 			self.text_entry.delete('1.0', 'end')
-			self.label_message.config(text='')
-		except IOError:
-			self.label_message.config(text=strings('err_io'))
+		except IOError as e:
+			messagebox.showerror(strings('title_err_io'), str(e))
 
 	# get time in the most logical fashion ever invented by men
 	# YYYY.MM.DD HH:MM:SS ex. 2019.03.07 20:30:05
@@ -95,7 +99,9 @@ dict_strings = {
 	'title': 'Log Recorder',
 	'button_enter': 'Enter',
 	# messages
-	'err_io': '|| Error. Directory does not exist.',
+	'title_dir_create': 'Directory Created',
+	'msg_dir_create': 'Directory %s has been created.',
+	'title_err_io': 'I/O Error',
 	# configurable
 	'path_dir': 'Other',
 	'name_filename': 'myLogs',
