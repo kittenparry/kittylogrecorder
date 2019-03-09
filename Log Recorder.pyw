@@ -16,18 +16,6 @@ class Gui(tk.Frame):
 
 	# draw/create gui elements
 	def add_elements(self):
-		# directory label and entry (aren't packed currently)
-		self.label_dir = tk.Label(self.row_top, text=strings('label_dir'), state='disabled')
-		self.entry_dir = tk.Entry(self.row_top, width=10)
-		self.entry_dir.insert(tk.END, strings('path_dir'))
-		# self.entry_dir.configure(state='disabled')
-
-		# filename label and entry (aren't packed currently)
-		self.label_filename = tk.Label(self.row_top, text=strings('label_filename'), state='disabled')
-		self.entry_filename = tk.Entry(self.row_top, width=10)
-		self.entry_filename.insert(tk.END, strings('name_filename'))
-		# self.entry_filename.configure(state='disabled')
-
 		# text area input and y-scrollbar
 		# bind RETURN to text area input
 		self.text_entry = tk.Text(self.row_bot, width=50, height=4, wrap='word')
@@ -64,8 +52,8 @@ class Gui(tk.Frame):
 		try:
 			# get path and filename from their respective entries
 			# currently the static values in the strings dictionary
-			path = str(self.entry_dir.get())
-			file = str(self.entry_filename.get())
+			path = strings('path_dir')
+			file = strings('name_filename')
 
 			# if filename doesn't end in .txt append it
 			# if path ends in backward or forward slash append filename to path
@@ -105,8 +93,6 @@ class Gui(tk.Frame):
 dict_strings = {
 	# static
 	'title': 'Log Recorder',
-	'label_dir': 'Dir:',
-	'label_filename': 'Name:',
 	'button_enter': 'Enter',
 	# messages
 	'err_io': '|| Error. Directory does not exist.',
