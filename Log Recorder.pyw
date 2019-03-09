@@ -129,10 +129,9 @@ def get_geometry():
 
 if __name__ == '__main__':
 	root = tk.Tk(className='logrecorder')
-	# Linux scaling problem fix
-	# needs testing on Windows
-	# might add an if platform.system() == 'Linux':
-	root.tk.call('tk', 'scaling', 1.3)
+	# dpi problem fix for my own self, might not be an issue elsewhere
+	if platform.system() == 'Linux':
+		root.tk.call('tk', 'scaling', 1.3)
 	root.title(strings('title'))
 	root.geometry(get_geometry())
 	app = Gui(master=root)
