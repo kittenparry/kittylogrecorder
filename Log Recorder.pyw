@@ -3,6 +3,7 @@ from tkinter import messagebox
 import time
 import platform
 import os
+import click
 
 
 class Gui(tk.Frame):
@@ -127,7 +128,7 @@ def get_geometry():
 		return ('%dx115+%d+30' % (program_width, x_position))
 
 
-if __name__ == '__main__':
+def start_gui():
 	root = tk.Tk(className='logrecorder')
 	# dpi problem fix for my own self, might not be an issue elsewhere
 	if platform.system() == 'Linux':
@@ -136,3 +137,51 @@ if __name__ == '__main__':
 	root.geometry(get_geometry())
 	app = Gui(master=root)
 	app.mainloop()
+
+#==============
+#==============
+
+def log_record(entry):
+	try:
+		path = strings('path_dir')
+		file = strings('name_filename')
+		if not os.path.exists(path):
+			os.makedirs(path)
+			print("%s: %s" % (strings('title_dir_create'), strings('msg_dir_create')))
+		
+		if file[len(file)-4:len(file)] != '.txt':
+			file += '.txt'
+		if path[len(path)-1:len(path)] == '\\' or path[len(path)-1:len(path)] == '/':
+			log_path = path + file
+		else:
+			log_path = path + '/' + file
+		
+		log = get_time() + '| ' + str(entry) + '\n'
+		with open(log_path, 'a') as f:
+			f.write(log)
+	except IOError as e:
+		print("%s: %s" % (strings('title_err_io'), str(e)))
+
+def get_time():
+	return time.strftime('%Y.%m.%d %H:%M:%S')
+
+def start_cli():
+	print(strings('title'))
+	while True:
+		entry = input('>>')
+		log_record(entry)
+
+
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.option('-g', '--gui', is_flag=True,
+	help='Launches the program in GUI instead of CLI.')
+def start(gui):
+	if(gui):
+		start_gui()
+	else:
+		start_cli()
+
+
+if __name__ == '__main__':
+	start()
