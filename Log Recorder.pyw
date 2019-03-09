@@ -128,7 +128,7 @@ def get_geometry():
 
 
 if __name__ == '__main__':
-	root = tk.Tk()
+	root = tk.Tk(className='logrecorder')
 	# Linux scaling problem fix
 	# needs testing on Windows
 	# might add an if platform.system() == 'Linux':
