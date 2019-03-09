@@ -141,6 +141,9 @@ def start_gui():
 #==============
 #==============
 
+# TODO: get gui as a flag, 
+# if gui probably will need self passed, 
+# then have variables assigned in if elses
 def log_record(entry):
 	try:
 		path = strings('path_dir')
