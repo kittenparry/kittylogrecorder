@@ -1,96 +1,139 @@
 import tkinter as tk
+from tkinter import messagebox
 import time
+import platform
+import os
+
 
 class Gui(tk.Frame):
-	def __init__(self, master=None):
+
+	def __init__(self, master = None):
 		tk.Frame.__init__(self, master)
-		#TODO: a true/false instead of this x
-		self.x = 1
-		self.row1 = tk.Frame(master)
-		self.row2 = tk.Frame(master)
-		self.row1.grid(row=0, column=0)
-		self.row2.grid(row=1, column=0, sticky="ew", padx=(10,0))
+		self.row_top = tk.Frame(master)
+		self.row_bot = tk.Frame(master)
+		self.row_top.grid(row=0, column=0)
+		self.row_bot.grid(row=1, column=0, sticky='ew', padx=(10,0))
 		self.add_elements()
 		self.set_time()
+
+	# draw/create gui elements
 	def add_elements(self):
-		self.label_dir = tk.Label(self.row1, text=strings("label_dir"), state='disabled')
-		self.entry_dir = tk.Entry(self.row1, width=10)
-		self.entry_dir.insert(tk.END, strings("path_dir"))
-		self.entry_dir.configure(state='disabled')
-		self.label_fname = tk.Label(self.row1, text=strings("label_fname"), state='disabled')
-		self.entry_fname = tk.Entry(self.row1, width=10)
-		self.entry_fname.insert(tk.END, strings("name_fname"))
-		self.entry_fname.configure(state='disabled')
-		self.text_entry = tk.Text(self.row2, width=50, height=4, wrap='word')
-		self.text_entry.bind("<Return>", self.log_entry_event)
-		self.scrolly = tk.Scrollbar(self.row2, orient='vertical', command=self.text_entry.yview)
+		# text area input and y-scrollbar
+		# bind RETURN to text area input
+		self.text_entry = tk.Text(self.row_bot, width=50, height=4, wrap='word')
+		self.text_entry.bind('<Return>', self.log_entry_event)
+		self.scrolly = tk.Scrollbar(self.row_bot, orient='vertical', command=self.text_entry.yview)
 		self.text_entry.configure(yscrollcommand=self.scrolly.set)
-		self.button_enter = tk.Button(self.row1, text=strings("button_enter"), command=self.log_entry)
-		self.label_time = tk.Label(self.row1, text="")
-		self.label_message = tk.Label(self.row1, text="")
-		self.els = [self.label_time, self.label_message, self.label_dir, self.entry_dir,
-			self.label_fname, self.entry_fname, self.text_entry, self.button_enter]
-		for e in self.els:
-			e.pack(side="left", pady=2, padx=1)
-		self.scrolly.pack(side="left", fill="y")
+
+		# enter button
+		self.button_enter = tk.Button(self.row_top, text=strings('button_enter'), command=self.log_entry)
+
+		# time labels
+		self.label_time = tk.Label(self.row_top, text='')
+
+		# pack time, message, text area input and enter button
+		# don't pack directory and filename label/entries
+		# pack y-scrollbar separately
+		self.elements = [self.label_time, self.text_entry, self.button_enter]
+		for el in self.elements:
+			el.pack(side='left', pady=2, padx=1)
+		self.scrolly.pack(side='left', fill='y')
+
+		# focus text area input on launch
 		self.text_entry.focus()
+
+	# entry event bound to RETURN key press on text area input
+	# return 'break' prevents the logging of a new line character born from RETURN key press
 	def log_entry_event(self, event):
 		self.log_entry()
 		return 'break'
-	#TODO:
-	#if not os.path.exists(path):
-	#   os.makedirs(path)
+
+	# logging/appending to file function
 	def log_entry(self):
 		try:
-			path = str(self.entry_dir.get())
-			file = str(self.entry_fname.get())
+			# get path and filename from their respective entries
+			# currently the static values in the strings dictionary
+			path = strings('path_dir')
+			file = strings('name_filename')
+			# create the directory if it doesn't exist already and inform the user
+			if not os.path.exists(path):
+				os.makedirs(path)
+				messagebox.showinfo(strings('title_dir_create'), strings('msg_dir_create') % path)
+
+			# if filename doesn't end in .txt append it
+			# if path ends in backward or forward slash append filename to path
+			# else add a forward slash between them
 			if file[len(file)-4:len(file)] != '.txt':
-				file += ".txt"
+				file += '.txt'
 			if path[len(path)-1:len(path)] == '\\' or path[len(path)-1:len(path)] == '/':
-				wp = path + file
+				log_path = path + file
 			else:
-				wp = path + "/" + file
-			#TODO C:\ folder fix
-			if wp[0:3] == "C:\\" and file == wp[3:len(wp)]:
-				self.label_message.config(text=strings("err_c_path"))
-			else:
-				fw = open(wp, 'a')
-				msg = self.get_time() + "| " + str(self.text_entry.get('1.0', 'end'))
-				fw.write(msg)
-				if self.x > 1:
-					self.label_message.config(text=strings("logged1"))
-					self.x = 1
-				else:
-					self.label_message.config(text=strings("logged2"))
-					self.x += 1
-				fw.close()
-				self.text_entry.delete('1.0', 'end')
-		except IOError:
-			self.label_message.config(text=strings("err_io"))
+				log_path = path + '/' + file
+
+			# format the log output
+			# 2019.03.07 20:30:05| this is a test log.
+			# append it to the log file and clear the text area input
+			log = self.get_time() + '| ' + str(self.text_entry.get('1.0', 'end'))
+			with open(log_path, 'a') as f:
+				f.write(log)
+			self.text_entry.delete('1.0', 'end')
+		except IOError as e:
+			messagebox.showerror(strings('title_err_io'), str(e))
+
+	# get time in the most logical fashion ever invented by men
+	# YYYY.MM.DD HH:MM:SS ex. 2019.03.07 20:30:05
+	# month, day, hour, minute and seconds are with leading zeroes
+	# 24 hour formatting to not lose much more space in time
 	def get_time(self):
-		return time.strftime("%Y.%m.%d %H:%M:%S")
+		return time.strftime('%Y.%m.%d %H:%M:%S')
+
+	# reset gui date/time display every .3 seconds
 	def set_time(self):
 		self.label_time.config(text=self.get_time())
 		self.after(333, self.set_time)
 
+
+# a dictionary of strings to hold everything in one place
 dict_strings = {
-	"title": "Log Recorder",
-	"label_dir": "Dir:",
-	"path_dir": "Other",
-	"label_fname": "Name:",
-	"name_fname": "myLogs",
-	"button_enter": "Enter",
-	"err_c_path": "|| Error. Can't write to C:\ alone.\n|| Put a folder or change the drive.",
-	"err_io": "|| Error. Directory doesn't exist.",
-	"logged1": "|| Logged!!",
-	"logged2": "|| Logged..",
+	# static
+	'title': 'Log Recorder',
+	'button_enter': 'Enter',
+	# messages
+	'title_dir_create': 'Directory Created',
+	'msg_dir_create': 'Directory %s has been created.',
+	'title_err_io': 'I/O Error',
+	# configurable
+	'path_dir': 'Other',
+	'name_filename': 'myLogs',
 }
+
+# returns the string value with given key
 def strings(s):
 	return dict_strings.get(s)
 
+# if on Windows spawns the window to the upper left of the screen
+# else top of the middle
+# note: I don't have access to OS X to see if it looks good or if it works
+# FIXME: assumes 1920 screen width for other OSes
+def get_geometry():
+	if platform.system() == 'Windows':
+		return '435x115+94+0'
+	# elif os == 'Linux'
+	# might as well use else to include OS X
+	else:
+		screen_width = 1920
+		program_width = 390
+		x_position = (screen_width - program_width) / 2
+		return ('%dx115+%d+30' % (program_width, x_position))
+
+
 if __name__ == '__main__':
-	root = tk.Tk()
-	root.title(strings("title"))
-	root.geometry("435x115+94+0")
+	root = tk.Tk(className='logrecorder')
+	# Linux scaling problem fix
+	# needs testing on Windows
+	# might add an if platform.system() == 'Linux':
+	root.tk.call('tk', 'scaling', 1.3)
+	root.title(strings('title'))
+	root.geometry(get_geometry())
 	app = Gui(master=root)
 	app.mainloop()
