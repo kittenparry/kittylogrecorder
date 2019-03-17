@@ -18,4 +18,4 @@ You need to edit directory and filename in `dict_strings` beforehand for the pro
 `path_dir`: directory path (`.` for the current directory)  
 `name_filename`: filename
 
-Default file path is `Other/myLogs.txt` for my own use. You can also enable editing of the directory and filename fields if need be.
+Default file path is `Other/myLogs.txt` for my own use.
