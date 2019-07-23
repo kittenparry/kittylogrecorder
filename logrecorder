@@ -76,7 +76,7 @@ dict_strings = {
 	# static
 	'title': 'Log Recorder',
 	'button_enter': 'Enter',
-	'version': '1.0',
+	'version': '1.1',
 	'version_full': 'logrecorder version %s',
 	'name_config': 'config.logrecorder',
 	'help': """Usage: logrecorder [OPTIONS]
