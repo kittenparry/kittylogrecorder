@@ -32,13 +32,16 @@ class Gui(tk.Frame):
 		# enter button
 		self.button_enter = tk.Button(self.row_top, text=strings('button_enter'), command=self.log_entry)
 
+		# info button
+		self.button_info = tk.Button(self.row_top, text='About', command=self.pop_info)
+
 		# time labels
 		self.label_time = tk.Label(self.row_top, text='')
 
 		# pack time, message, text area input and enter button
 		# don't pack directory and filename label/entries
 		# pack y-scrollbar separately
-		self.elements = [self.label_time, self.text_entry, self.button_enter]
+		self.elements = [self.button_info, self.label_time, self.text_entry, self.button_enter]
 		for el in self.elements:
 			el.pack(side='left', pady=2, padx=1)
 		self.scrolly.pack(side='left', fill='y')
@@ -96,16 +99,31 @@ class Gui(tk.Frame):
 		self.label_time.config(text=self.get_time())
 		self.after(333, self.set_time)
 
+	# shows version info on screen
+	# TODO: add other information like the author, date of the last commit etc.
+	def pop_info(self):
+		messagebox.showinfo('About', strings('version_full') % strings('version'))
+
 
 # a dictionary of strings to hold everything in one place
 dict_strings = {
 	# static
 	'title': 'Log Recorder',
 	'button_enter': 'Enter',
+	'version': '1.0',
+	'version_full': 'logrecorder version %s',
+	'help': """Usage: logrecorder [OPTIONS]
+	
+Options:
+  -g, --gui\tLaunch the program in GUI instead of CLI.
+  -v, --version\tShow version information and exit.
+  -h, --help\tShow this message and exit.""",
 	# messages
 	'title_dir_create': 'Directory Created',
 	'msg_dir_create': 'Directory %s has been created.',
 	'title_err_io': 'I/O Error',
+	'invalid_option': 'Invalid option \'%s\'.\nTry --help for help.',
+	'invalid_num_args': 'Invalid number of arguments. Only 1 is allowed.\nTry --help for help.',
 	# configurable
 	'path_dir': 'Other',
 	'name_filename': 'myLogs',
@@ -186,14 +204,13 @@ def start():
 		if arg == '-g' or arg == '--gui':
 			start_gui()
 		elif arg == '-h' or arg == '--help':
-			print('help')
-			pass
+			print(strings('help'))
+		elif arg == '-v' or arg == '--version':
+			print(strings('version_full') % strings('version'))
 		else:
-			print('invalid option')
-			pass
+			print(strings('invalid_option') % str(arg))
 	else:
-		print('invalid number of args')
-		pass
+		print(strings('invalid_num_args'))
 
 
 if __name__ == '__main__':
