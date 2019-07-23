@@ -5,7 +5,7 @@ from tkinter import messagebox
 import time
 import platform
 import os
-import click
+import sys
 
 
 class Gui(tk.Frame):
@@ -23,8 +23,9 @@ class Gui(tk.Frame):
 	def add_elements(self):
 		# text area input and y-scrollbar
 		# bind RETURN to text area input
-		self.text_entry = tk.Text(self.row_bot, width=50, height=4, wrap='word')
+		self.text_entry = tk.Text(self.row_bot, width=50, height=4, wrap='word', undo=True)
 		self.text_entry.bind('<Return>', self.log_entry_event)
+		self.text_entry.bind('<KP_Enter>', self.log_entry_event)
 		self.scrolly = tk.Scrollbar(self.row_bot, orient='vertical', command=self.text_entry.yview)
 		self.text_entry.configure(yscrollcommand=self.scrolly.set)
 
@@ -177,15 +178,22 @@ def start_cli():
 		log_record(entry)
 
 
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
-@click.command(context_settings=CONTEXT_SETTINGS)
-@click.option('-g', '--gui', is_flag=True,
-	help='Launches the program in GUI instead of CLI.')
-def start(gui):
-	if(gui):
-		start_gui()
-	else:
+def start():
+	if len(sys.argv) == 1:
 		start_cli()
+	elif len(sys.argv) == 2:
+		arg = sys.argv[1]
+		if arg == '-g' or arg == '--gui':
+			start_gui()
+		elif arg == '-h' or arg == '--help':
+			print('help')
+			pass
+		else:
+			print('invalid option')
+			pass
+	else:
+		print('invalid number of args')
+		pass
 
 
 if __name__ == '__main__':
