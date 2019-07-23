@@ -32,16 +32,13 @@ class Gui(tk.Frame):
 		# enter button
 		self.button_enter = tk.Button(self.row_top, text=strings('button_enter'), command=self.log_entry)
 
-		# info button
-		self.button_info = tk.Button(self.row_top, text='About', command=self.pop_info)
-
 		# time labels
 		self.label_time = tk.Label(self.row_top, text='')
 
 		# pack time, message, text area input and enter button
 		# don't pack directory and filename label/entries
 		# pack y-scrollbar separately
-		self.elements = [self.button_info, self.label_time, self.text_entry, self.button_enter]
+		self.elements = [self.label_time, self.text_entry, self.button_enter]
 		for el in self.elements:
 			el.pack(side='left', pady=2, padx=1)
 		self.scrolly.pack(side='left', fill='y')
@@ -98,11 +95,6 @@ class Gui(tk.Frame):
 	def set_time(self):
 		self.label_time.config(text=self.get_time())
 		self.after(333, self.set_time)
-
-	# shows version info on screen
-	# TODO: add other information like the author, date of the last commit etc.
-	def pop_info(self):
-		messagebox.showinfo('About', strings('version_full') % strings('version'))
 
 
 # a dictionary of strings to hold everything in one place
