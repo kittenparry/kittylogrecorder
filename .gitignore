@@ -1,2 +1,4 @@
 # currently set logs directory
 Other/
+# configuration file for path and filename
+config.logrecorder

@@ -1,0 +1,4 @@
+CHANGELOG:
+
+(19-07-24) 1.1	Ability to change path/filename with command line options.
+(19-07-23) 1.0	Initial version labeling.

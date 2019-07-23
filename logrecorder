@@ -78,19 +78,24 @@ dict_strings = {
 	'button_enter': 'Enter',
 	'version': '1.0',
 	'version_full': 'logrecorder version %s',
+	'name_config': 'config.logrecorder',
 	'help': """Usage: logrecorder [OPTIONS]
 	
 Options:
-  -g, --gui\tLaunch the program in GUI instead of CLI.
-  -v, --version\tShow version information and exit.
-  -h, --help\tShow this message and exit.""",
+  -g, --gui\t\tLaunch the program in GUI instead of CLI.
+  -p, --path PATH\tSet and save destination directory in a config file.
+  -f, --file FILENAME\tSet and save target filename in a config file.
+  -v, --version\t\tShow version information and exit.
+  -h, --help\t\tShow this message and exit.""",
 	# messages
 	'title_dir_create': 'Directory Created',
 	'msg_dir_create': 'Directory %s has been created.',
 	'title_err_io': 'I/O Error',
 	'invalid_option': 'Invalid option \'%s\'.\nTry --help for help.',
-	'invalid_num_args': 'Invalid number of arguments. Only 1 is allowed.\nTry --help for help.',
+	'invalid_num_args': 'Invalid number of arguments. Only 2 is allowed.\nTry --help for help.',
 	'msg_key_interrupt': '\nProgram was shutdown by user input (CTRL-C).',
+	'msg_def_conf_create': 'Default config file has been created.',
+	'msg_path_set': '%s has been set to %s.\nFull path is %s',
 	# configurable
 	'path_dir': 'Other',
 	'name_filename': 'myLogs',
@@ -119,8 +124,9 @@ def log_record(entry, gui = False):
 	try:
 		# get path and filename from their respective entries
 		# currently the static values in the strings dictionary
-		path = strings('path_dir')
-		file = strings('name_filename')
+		data = get_config()
+		path = data[0]
+		file = data[1]
 		# create the directory if it doesn't exist already and inform the user
 		if not os.path.exists(path):
 			os.makedirs(path)
@@ -132,8 +138,10 @@ def log_record(entry, gui = False):
 		# if filename doesn't end in .txt append it
 		# if path ends in backward or forward slash append filename to path
 		# else add a forward slash between them
+		# TODO: use return txt function here as well
 		if file[len(file)-4:len(file)] != '.txt':
 			file += '.txt'
+		# TODO: os.path.join() instead of these if checks
 		if path[len(path)-1:len(path)] == '\\' or path[len(path)-1:len(path)] == '/':
 			log_path = path + file
 		else:
@@ -159,6 +167,55 @@ def log_record(entry, gui = False):
 def get_time():
 	return time.strftime('%Y.%m.%d %H:%M:%S')
 
+# get path values if config file exists, else get them from the dictionary
+def get_config():
+	try:
+		name_config = strings('name_config')
+		if os.path.isfile(name_config):
+			with open(name_config, 'r') as config:
+				data = config.readlines()
+				data[0] = data[0].rstrip()
+				return data
+		else:
+			return [strings('path_dir'), strings('name_filename')]
+
+	except IOError as e:
+		print("%s: %s" % (strings('title_err_io'), str(e)))
+
+# set path values with CLI options
+def set_config(key, value):
+	name_config = strings('name_config')
+	try:
+		if not os.path.isfile(name_config):
+			with open(name_config, 'w') as config:
+				def_data = '%s\n%s' % (strings('path_dir'), strings('name_filename'))
+				config.writelines(def_data)
+			print(strings('msg_def_conf_create'))
+
+		with open(name_config, 'r') as config:
+			data = config.readlines()
+
+		if key == 'Path':
+			file_name = get_txt_ext(data[1])
+			full_path = os.path.join(value, file_name)
+			line = 0
+		else: # Filename
+			file_name = get_txt_ext(value)
+			full_path = os.path.join(data[0].rstrip(), file_name)
+			line = 1
+
+		# FIXME: probably could just set in the if statement above
+		data[line] = value + ('\n' if line == 0 else '')
+		with open(name_config, 'w') as config:
+			config.writelines(data)
+		print(strings('msg_path_set') % (key, value, full_path))
+
+	except IOError as e:
+		print("%s: %s" % (strings('title_err_io'), str(e)))
+
+def get_txt_ext(file):
+	return (file + '.txt') if file[len(file)-4:len(file)] != '.txt' else file
+
 
 def start_cli():
 	print(strings('title'))
@@ -182,15 +239,24 @@ def start():
 	if len(sys.argv) == 1:
 		start_cli()
 	elif len(sys.argv) == 2:
-		arg = sys.argv[1]
-		if arg == '-g' or arg == '--gui':
+		opt = str(sys.argv[1])
+		if opt == '-g' or opt == '--gui':
 			start_gui()
-		elif arg == '-h' or arg == '--help':
+		elif opt == '-h' or opt == '--help':
 			print(strings('help'))
-		elif arg == '-v' or arg == '--version':
+		elif opt == '-v' or opt == '--version':
 			print(strings('version_full') % strings('version'))
 		else:
-			print(strings('invalid_option') % str(arg))
+			print(strings('invalid_option') % str(opt))
+	elif len(sys.argv) == 3:
+		opt = str(sys.argv[1])
+		arg = str(sys.argv[2])
+		if opt == '-p' or opt == '--path':
+			set_config('Path', arg)
+		elif opt == '-f' or opt == '--filename':
+			set_config('Filename', arg)
+		else:
+			print(strings('invalid_option') % str(opt))
 	else:
 		print(strings('invalid_num_args'))
 
