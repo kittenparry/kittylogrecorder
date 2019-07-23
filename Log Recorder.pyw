@@ -25,6 +25,7 @@ class Gui(tk.Frame):
 		# bind RETURN to text area input
 		self.text_entry = tk.Text(self.row_bot, width=50, height=4, wrap='word', undo=True)
 		self.text_entry.bind('<Return>', self.log_entry_event)
+		self.text_entry.bind('<KP_Enter>', self.log_entry_event)
 		self.scrolly = tk.Scrollbar(self.row_bot, orient='vertical', command=self.text_entry.yview)
 		self.text_entry.configure(yscrollcommand=self.scrolly.set)
 
