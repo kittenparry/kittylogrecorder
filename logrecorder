@@ -82,9 +82,10 @@ dict_strings = {
 	'help': """Usage: logrecorder [OPTIONS]
 	
 Options:
+  -p, --path PATH\tSet & save destination directory to the config file.
+  -f, --file FILENAME\tSet & save target filename to the config file.
+\t\t\t  Creating the config file will override path values in in-program dictionary (dict_strings).
   -g, --gui\t\tLaunch the program in GUI instead of CLI.
-  -p, --path PATH\tSet and save destination directory in a config file.
-  -f, --file FILENAME\tSet and save target filename in a config file.
   -v, --version\t\tShow version information and exit.
   -h, --help\t\tShow this message and exit.""",
 	# messages
