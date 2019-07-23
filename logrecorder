@@ -132,7 +132,7 @@ def log_record(entry, gui = False):
 			if gui:
 				messagebox.showinfo(strings('title_dir_create'), strings('msg_dir_create') % path)
 			# print information message to console no matter
-			print("%s: %s" % (strings('title_dir_create'), strings('msg_dir_create')))
+			print(strings('msg_dir_create') % path)
 		
 		# if filename doesn't end in .txt append it
 		# if path ends in backward or forward slash append filename to path
