@@ -76,9 +76,10 @@ dict_strings = {
 	# static
 	'title': 'Log Recorder',
 	'button_enter': 'Enter',
-	'version': '1.1',
+	'version': '1.1.1',
 	'version_full': 'logrecorder version %s',
 	'name_config': 'config.logrecorder',
+	###
 	'help': """Usage: logrecorder [OPTIONS]
 	
 Options:
@@ -86,14 +87,16 @@ Options:
   -f, --file FILENAME\tSet & save target filename to the config file.
 \t\t\t  Creating the config file will override path values in in-program dictionary (dict_strings).
   -g, --gui\t\tLaunch the program in GUI instead of CLI.
+\t\t\t  When combining with path options, GUI must come last.
   -v, --version\t\tShow version information and exit.
   -h, --help\t\tShow this message and exit.""",
+	###
 	# messages
 	'title_dir_create': 'Directory Created',
 	'msg_dir_create': 'Directory %s has been created.',
 	'title_err_io': 'I/O Error',
 	'invalid_option': 'Invalid option \'%s\'.\nTry --help for help.',
-	'invalid_num_args': 'Invalid number of arguments. Only 2 is allowed.\nTry --help for help.',
+	'invalid_num_args': 'Invalid number of arguments.\nTry --help for help.',
 	'msg_key_interrupt': '\nProgram was shutdown by user input (CTRL-C).',
 	'msg_def_conf_create': 'Default config file has been created.',
 	'msg_path_set': '%s has been set to %s.\nFull path is %s',
@@ -239,27 +242,34 @@ def start_gui():
 def start():
 	if len(sys.argv) == 1:
 		start_cli()
-	elif len(sys.argv) == 2:
-		opt = str(sys.argv[1])
-		if opt == '-g' or opt == '--gui':
-			start_gui()
-		elif opt == '-h' or opt == '--help':
-			print(strings('help'))
-		elif opt == '-v' or opt == '--version':
-			print(strings('version_full') % strings('version'))
-		else:
-			print(strings('invalid_option') % str(opt))
-	elif len(sys.argv) == 3:
-		opt = str(sys.argv[1])
-		arg = str(sys.argv[2])
-		if opt == '-p' or opt == '--path':
-			set_config('Path', arg)
-		elif opt == '-f' or opt == '--filename':
-			set_config('Filename', arg)
-		else:
-			print(strings('invalid_option') % str(opt))
 	else:
+		while len(sys.argv) > 1:
+			opt = str(sys.argv[1])
+			if opt == '-g' or opt == '--gui':
+				start_gui()
+				exit()
+			elif opt == '-h' or opt == '--help':
+				print(strings('help'))
+				exit()
+			elif opt == '-v' or opt == '--version':
+				print(strings('version_full') % strings('version'))
+				exit()
+			elif opt == '-p' or opt == '--path':
+				check_args('Path')
+			elif opt == '-f' or opt == '--filename':
+				check_args('Filename')
+			else:
+				print(strings('invalid_option') % str(opt))
+				exit()
+
+			del(sys.argv[1])
+
+def check_args(key):
+	if len(sys.argv) < 3:
 		print(strings('invalid_num_args'))
+		exit(1)
+	set_config(key, sys.argv[2])
+	del(sys.argv[1])
 
 
 if __name__ == '__main__':
