@@ -54,46 +54,12 @@ class Gui(tk.Frame):
 
 	# logging/appending to file function
 	def log_entry(self):
-		try:
-			# get path and filename from their respective entries
-			# currently the static values in the strings dictionary
-			path = strings('path_dir')
-			file = strings('name_filename')
-			# create the directory if it doesn't exist already and inform the user
-			if not os.path.exists(path):
-				os.makedirs(path)
-				messagebox.showinfo(strings('title_dir_create'), strings('msg_dir_create') % path)
-
-			# if filename doesn't end in .txt append it
-			# if path ends in backward or forward slash append filename to path
-			# else add a forward slash between them
-			if file[len(file)-4:len(file)] != '.txt':
-				file += '.txt'
-			if path[len(path)-1:len(path)] == '\\' or path[len(path)-1:len(path)] == '/':
-				log_path = path + file
-			else:
-				log_path = path + '/' + file
-
-			# format the log output
-			# 2019.03.07 20:30:05| this is a test log.
-			# append it to the log file and clear the text area input
-			log = self.get_time() + '| ' + str(self.text_entry.get('1.0', 'end'))
-			with open(log_path, 'a') as f:
-				f.write(log)
-			self.text_entry.delete('1.0', 'end')
-		except IOError as e:
-			messagebox.showerror(strings('title_err_io'), str(e))
-
-	# get time in the most logical fashion ever invented by men
-	# YYYY.MM.DD HH:MM:SS ex. 2019.03.07 20:30:05
-	# month, day, hour, minute and seconds are with leading zeroes
-	# 24 hour formatting to not lose much more space in time
-	def get_time(self):
-		return time.strftime('%Y.%m.%d %H:%M:%S')
+		log_record(str(self.text_entry.get('1.0', 'end')), True)
+		self.text_entry.delete('1.0', 'end')
 
 	# reset gui date/time display every .3 seconds
 	def set_time(self):
-		self.label_time.config(text=self.get_time())
+		self.label_time.config(text=get_time())
 		self.after(333, self.set_time)
 
 
@@ -154,17 +120,23 @@ def start_gui():
 #==============
 #==============
 
-# TODO: get gui as a flag, 
-# if gui probably will need self passed, 
-# then have variables assigned in if elses
-def log_record(entry):
+def log_record(entry, gui = False):
 	try:
+		# get path and filename from their respective entries
+		# currently the static values in the strings dictionary
 		path = strings('path_dir')
 		file = strings('name_filename')
+		# create the directory if it doesn't exist already and inform the user
 		if not os.path.exists(path):
 			os.makedirs(path)
+			if gui:
+				messagebox.showinfo(strings('title_dir_create'), strings('msg_dir_create') % path)
+			# print information message to console no matter
 			print("%s: %s" % (strings('title_dir_create'), strings('msg_dir_create')))
 		
+		# if filename doesn't end in .txt append it
+		# if path ends in backward or forward slash append filename to path
+		# else add a forward slash between them
 		if file[len(file)-4:len(file)] != '.txt':
 			file += '.txt'
 		if path[len(path)-1:len(path)] == '\\' or path[len(path)-1:len(path)] == '/':
@@ -172,12 +144,23 @@ def log_record(entry):
 		else:
 			log_path = path + '/' + file
 		
-		log = get_time() + '| ' + str(entry) + '\n'
+		# format the log output
+		# 2019.03.07 20:30:05| this is a test log.
+		# append it to the log file and clear the text area input
+		log = get_time() + '| ' + str(entry) + ('' if gui else '\n')
 		with open(log_path, 'a') as f:
 			f.write(log)
 	except IOError as e:
+		if gui:
+			messagebox.showerror(strings('title_err_io'), str(e))
+		# print error log to console no matter
 		print("%s: %s" % (strings('title_err_io'), str(e)))
 
+# get time in the most logical fashion ever invented by mankind
+# ISO-8601 https://www.iso.org/iso-8601-date-and-time-format.html
+# YYYY.MM.DD HH:MM:SS ex. 2019.03.07 20:30:05
+# month, day, hour, minute and seconds are with leading zeroes
+# 24 hour formatting to not lose much more space in time
 def get_time():
 	return time.strftime('%Y.%m.%d %H:%M:%S')
 
