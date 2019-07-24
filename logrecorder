@@ -78,6 +78,7 @@ dict_strings = {
 	'button_enter': 'Enter',
 	'version': '1.1.1',
 	'version_full': 'logrecorder version %s',
+	'path_config': os.path.join(os.path.expanduser('~'), '.config', 'logrecorder'),
 	'name_config': 'config.logrecorder',
 	###
 	'help': """Usage: logrecorder [OPTIONS]
@@ -85,7 +86,8 @@ dict_strings = {
 Options:
   -p, --path PATH\tSet & save destination directory to the config file.
   -f, --file FILENAME\tSet & save target filename to the config file.
-\t\t\t  Creating the config file will override path values in in-program dictionary (dict_strings).
+\t\t\t  Creating the config file will override path values of in-program dictionary (dict_strings: path_dir, name_filename).
+  -d, --del\t\tDelete the configuration file & folder.
   -g, --gui\t\tLaunch the program in GUI instead of CLI.
 \t\t\t  When combining with path options, GUI must come last.
   -v, --version\t\tShow version information and exit.
@@ -100,6 +102,11 @@ Options:
 	'msg_key_interrupt': '\nProgram was shutdown by user input (CTRL-C).',
 	'msg_def_conf_create': 'Default config file has been created.',
 	'msg_path_set': '%s has been set to %s.\nFull path is %s',
+	'msg_del_sure': 'Are you sure you want to delete the configuration file? (y/n) ',
+	'msg_del_canc': 'Configuration file deletion is cancelled by user.',
+	'invalid_yn': 'Invalid input. Only enter y or n.',
+	'msg_del_succ': 'Configuration file & folder has been deleted.',
+	'msg_conf_exs': 'Configuration file already does not exist.',
 	# configurable
 	'path_dir': 'Other',
 	'name_filename': 'myLogs',
@@ -174,7 +181,7 @@ def get_time():
 # get path values if config file exists, else get them from the dictionary
 def get_config():
 	try:
-		name_config = strings('name_config')
+		name_config = os.path.join(strings('path_config'), strings('name_config'))
 		if os.path.isfile(name_config):
 			with open(name_config, 'r') as config:
 				data = config.readlines()
@@ -188,8 +195,10 @@ def get_config():
 
 # set path values with CLI options
 def set_config(key, value):
-	name_config = strings('name_config')
+	name_config = os.path.join(strings('path_config'), strings('name_config'))
 	try:
+		if not os.path.isdir(strings('path_config')):
+			os.makedirs(strings('path_config'))
 		if not os.path.isfile(name_config):
 			with open(name_config, 'w') as config:
 				def_data = '%s\n%s' % (strings('path_dir'), strings('name_filename'))
@@ -216,6 +225,28 @@ def set_config(key, value):
 
 	except IOError as e:
 		print("%s: %s" % (strings('title_err_io'), str(e)))
+
+def del_config():
+	name_config = os.path.join(strings('path_config'), strings('name_config'))
+	if os.path.isfile(name_config):
+		while True:
+			reply = input(strings('msg_del_sure'))
+			reply = reply.lower()
+			if reply == 'y' or reply == 'yes':
+				break
+			elif reply == 'n' or reply == 'no':
+				print(strings('msg_del_canc'))
+				sys.exit(0)
+			else:
+				print(strings('invalid_yn'))
+		try:
+			os.unlink(name_config)
+			os.rmdir(strings('path_config'))
+			print(strings('msg_del_succ'))
+		except IOError as e:
+			print("%s: %s" % (strings('title_err_io'), str(e)))
+	else:
+		print(strings('msg_conf_exs'))
 
 def get_txt_ext(file):
 	return (file + '.txt') if file[len(file)-4:len(file)] != '.txt' else file
@@ -253,6 +284,9 @@ def start():
 				exit()
 			elif opt == '-v' or opt == '--version':
 				print(strings('version_full') % strings('version'))
+				exit()
+			elif opt == '-d' or opt == '--del':
+				del_config()
 				exit()
 			elif opt == '-p' or opt == '--path':
 				check_args('Path')
