@@ -76,7 +76,7 @@ dict_strings = {
 	# static
 	'title': 'Log Recorder',
 	'button_enter': 'Enter',
-	'version': '1.3.2',
+	'version': '1.3.3',
 	'version_full': 'logrecorder version %s',
 	'path_config': os.path.join(os.path.expanduser('~'), '.config', 'logrecorder'),
 	'name_config': 'config.logrecorder',
@@ -204,14 +204,12 @@ def set_config(key, value):
 		if key == 'Path':
 			file_name = get_txt_ext(data[1])
 			full_path = os.path.join(value, file_name)
-			line = 0
+			data[0] = value + '\n'
 		else: # Filename
 			file_name = get_txt_ext(value)
 			full_path = os.path.join(data[0].rstrip(), file_name)
-			line = 1
+			data[1] = value
 
-		# FIXME: probably could just set in the if statement above
-		data[line] = value + ('\n' if line == 0 else '')
 		with open(name_config, 'w') as config:
 			config.writelines(data)
 		print(strings('msg_path_set') % (key, value, full_path))
