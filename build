@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# to quickly create compressed files for release
+# has nothing to do with the program itself
+
+# iterate through changelog to get the version number
+changelog='changelog.txt'
+counter=0
+line_three=''
+while read -r line
+do
+	counter=$((counter+1))
+	if [ $counter == 3 ]; then
+		line_three="$line"
+	fi
+done < "$changelog"
+
+# split tab from line_three into version array
+# ${version[0]} is version number
+IFS='	' read -r -a version <<< $line_three
+unset IFS
+
+name='logrecorder'
+filename="$name-${version[0]}.7z"
+build_dir='builds/'
+
+# exclude certain files and directories from compression
+ignored_dirs=($build_dir extras/ .git/ Other/)
+ignored_files=(build .gitignore README.md)
+cmd_dirs=''
+cmd_files=''
+for dir in "${ignored_dirs[@]}"
+do
+	cmd_dirs="$cmd_dirs-xr!$dir "
+done
+for file in "${ignored_files[@]}"
+do
+	cmd_files="$cmd_files-x!$file "
+done
+
+7z a $filename . $cmd_dirs$cmd_files
+if [ ! -d $build_dir ]; then
+	mkdir $build_dir
+	echo "$build_dir has been created."
+fi
+mv $filename $build_dir
+
+echo "$filename has been compressed and moved to $build_dir."

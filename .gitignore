@@ -2,3 +2,5 @@
 Other/
 # configuration file for path and filename
 config.logrecorder
+# release builds directory
+builds/
