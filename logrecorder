@@ -76,7 +76,7 @@ dict_strings = {
 	# static
 	'title': 'Log Recorder',
 	'button_enter': 'Enter',
-	'version': '1.3.1',
+	'version': '1.3.2',
 	'version_full': 'logrecorder version %s',
 	'path_config': os.path.join(os.path.expanduser('~'), '.config', 'logrecorder'),
 	'name_config': 'config.logrecorder',
@@ -147,16 +147,9 @@ def log_record(entry, gui = False):
 			print(strings('msg_dir_create') % path)
 		
 		# if filename doesn't end in .txt append it
-		# if path ends in backward or forward slash append filename to path
-		# else add a forward slash between them
-		# TODO: use return txt function here as well
-		if file[len(file)-4:len(file)] != '.txt':
-			file += '.txt'
-		# TODO: os.path.join() instead of these if checks
-		if path[len(path)-1:len(path)] == '\\' or path[len(path)-1:len(path)] == '/':
-			log_path = path + file
-		else:
-			log_path = path + '/' + file
+		# join path & filename
+		file = get_txt_ext(file)
+		log_path = os.path.join(path, file)
 		
 		# format the log output
 		# 2019.03.07 20:30:05| this is a test log.
