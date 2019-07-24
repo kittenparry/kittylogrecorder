@@ -1,8 +1,8 @@
 CHANGELOG:
 
-						1.3.1	Replace exit() with sys.exit() and remove 0 as argument.
-						1.3		Ability to delete configuration file & config path to ~/.config/logrecorder
-						1.2		Makefile to be able to install the program.
-						1.1.1	Better argument parsing to enable combination of options.
-(19-07-24)	1.1		Ability to change path/filename with command line options.
-(19-07-23)	1.0		Initial version labeling.
+            1.3.1	Replace exit() with sys.exit() and remove 0 as argument.
+            1.3		Ability to delete configuration file & config path to ~/.config/logrecorder
+            1.2		Makefile to be able to install the program.
+            1.1.1	Better argument parsing to enable combination of options.
+(19-07-24)  1.1		Ability to change path/filename with command line options.
+(19-07-23)  1.0		Initial version labeling.
