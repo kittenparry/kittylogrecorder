@@ -1,5 +1,6 @@
 CHANGELOG:
 
+(19-07-24) 1.2		Makefile to be able to install the program.
 (19-07-24) 1.1.1	Better argument parsing to enable combination of options.
 (19-07-24) 1.1		Ability to change path/filename with command line options.
 (19-07-23) 1.0		Initial version labeling.
