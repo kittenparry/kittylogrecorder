@@ -11,7 +11,7 @@ import signal
 
 def signal_handler(signal, frame):
 	print(strings('msg_key_interrupt'))
-	sys.exit(0)
+	sys.exit()
 
 signal.signal(signal.SIGINT, signal_handler)
 
@@ -236,7 +236,7 @@ def del_config():
 				break
 			elif reply == 'n' or reply == 'no':
 				print(strings('msg_del_canc'))
-				sys.exit(0)
+				sys.exit()
 			else:
 				print(strings('invalid_yn'))
 		try:
@@ -278,30 +278,30 @@ def start():
 			opt = str(sys.argv[1])
 			if opt == '-g' or opt == '--gui':
 				start_gui()
-				exit()
+				sys.exit()
 			elif opt == '-h' or opt == '--help':
 				print(strings('help'))
-				exit()
+				sys.exit()
 			elif opt == '-v' or opt == '--version':
 				print(strings('version_full') % strings('version'))
-				exit()
+				sys.exit()
 			elif opt == '-d' or opt == '--del':
 				del_config()
-				exit()
+				sys.exit()
 			elif opt == '-p' or opt == '--path':
 				check_args('Path')
 			elif opt == '-f' or opt == '--filename':
 				check_args('Filename')
 			else:
 				print(strings('invalid_option') % str(opt))
-				exit()
+				sys.exit()
 
 			del(sys.argv[1])
 
 def check_args(key):
 	if len(sys.argv) < 3:
 		print(strings('invalid_num_args'))
-		exit(1)
+		sys.exit(1)
 	set_config(key, sys.argv[2])
 	del(sys.argv[1])
 
