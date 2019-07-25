@@ -76,7 +76,7 @@ dict_strings = {
 	# static
 	'title': 'Log Recorder',
 	'button_enter': 'Enter',
-	'version': '1.3.3',
+	'version': '1.3.4',
 	'version_full': 'logrecorder version %s',
 	'path_config': os.path.join(os.path.expanduser('~'), '.config', 'logrecorder'),
 	'name_config': 'config.logrecorder',
@@ -88,6 +88,7 @@ Options:
   -f, --file FILENAME\tSet & save target filename to the config file.
 \t\t\t  Creating the config file will override path values of in-program dictionary (dict_strings: path_dir, name_filename).
   -d, --del\t\tDelete the configuration file & folder.
+  -c, --cli\t\tLaunch the program in CLI instead of GUI in Windows.
   -g, --gui\t\tLaunch the program in GUI instead of CLI.
 \t\t\t  When combining with path options, GUI must come last.
   -v, --version\t\tShow version information and exit.
@@ -267,7 +268,11 @@ def start():
 	else:
 		while len(sys.argv) > 1:
 			opt = str(sys.argv[1])
-			if opt == '-g' or opt == '--gui':
+			# Windows only option to start in CLI
+			if opt == '-c' or opt == '--cli':
+				start_cli()
+				sys.exit()
+			elif opt == '-g' or opt == '--gui':
 				start_gui()
 				sys.exit()
 			elif opt == '-h' or opt == '--help':
@@ -298,4 +303,7 @@ def check_args(key):
 
 
 if __name__ == '__main__':
+	# on Windows with no argument provided, start with GUI by default
+	if platform.system() == 'Windows' and len(sys.argv) == 1:
+		sys.argv.append('-g')
 	start()

@@ -4,21 +4,28 @@
 # has nothing to do with the program itself
 
 # iterate through changelog to get the version number
-changelog='changelog.txt'
-counter=0
-line_three=''
-while read -r line
-do
-	counter=$((counter+1))
-	if [ $counter == 3 ]; then
-		line_three="$line"
-	fi
-done < "$changelog"
+# or use the provided value as the first argument
+# FIXME: accepting arg. is a temporary bypass to not being able to get version
+# when a date is in front of the value in changelog.txt
+if [[ ! $1 ]]; then
+	changelog='changelog.txt'
+	counter=0
+	line_three=''
+	while read -r line
+	do
+		counter=$((counter+1))
+		if [ $counter == 3 ]; then
+			line_three="$line"
+		fi
+	done < "$changelog"
 
-# split tab from line_three into version array
-# ${version[0]} is version number
-IFS='	' read -r -a version <<< $line_three
-unset IFS
+	# split tab from line_three into version array
+	# ${version[0]} is version number
+	IFS='	' read -r -a version <<< $line_three
+	unset IFS
+else
+	version=("$1")
+fi
 
 name='logrecorder'
 filename="$name-${version[0]}.7z"
