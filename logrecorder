@@ -7,6 +7,7 @@ import platform
 import os
 import sys
 import signal
+import argparse
 
 
 def signal_handler(signal, frame):
@@ -263,43 +264,44 @@ def start_gui():
 
 
 def start():
+	parser = argparse.ArgumentParser(description='Write into a designated text file with timestamps. A diary, log keeping program if you will.')
+	parser.add_argument('-v', '--version',
+		help='show version information and exit',
+		action='store_true')
+	parser.add_argument('-i', '--info',
+		help='print current path to log file and exit',
+		action='store_true')
+	parser.add_argument('-c', '--cli',
+		help='launch the program in cli instead of gui (default behaviour in windows)',
+		action='store_true')
+	parser.add_argument('-g', '--gui',
+		help='launch the program in gui instead of cli',
+		action='store_true')
+	parser.add_argument('-p', '--path',
+		help='set path to log file in config file',
+		type=str)
+
+	args = parser.parse_args()
 	if len(sys.argv) == 1:
 		start_cli()
 	else:
-		while len(sys.argv) > 1:
-			opt = str(sys.argv[1])
-			# Windows only option to start in CLI
-			if opt == '-c' or opt == '--cli':
-				start_cli()
-				sys.exit()
-			elif opt == '-g' or opt == '--gui':
-				start_gui()
-				sys.exit()
-			elif opt == '-h' or opt == '--help':
-				print(strings('help'))
-				sys.exit()
-			elif opt == '-v' or opt == '--version':
-				print(strings('version_full') % strings('version'))
-				sys.exit()
-			elif opt == '-d' or opt == '--del':
-				del_config()
-				sys.exit()
-			elif opt == '-p' or opt == '--path':
-				check_args('Path')
-			elif opt == '-f' or opt == '--filename':
-				check_args('Filename')
-			else:
-				print(strings('invalid_option') % str(opt))
-				sys.exit()
-
-			del(sys.argv[1])
-
-def check_args(key):
-	if len(sys.argv) < 3:
-		print(strings('invalid_num_args'))
-		sys.exit(1)
-	set_config(key, sys.argv[2])
-	del(sys.argv[1])
+		if args.version:
+			# TODO: new function to print version with new variable on top (#45)
+			print('here be version print')
+			sys.exit()
+		if args.info:
+			print('here be print to current log path')
+			sys.exit()
+		if args.path:
+			print('log file path edit in config')
+		if args.cli and args.gui:
+			# TODO: warning or error message colours
+			print('cannot combine --gui & --cli. defaulting to cli...')
+			start_cli()
+		elif args.cli: # cli or gui, not both
+			start_cli()
+		elif args.gui:
+			start_gui()
 
 
 if __name__ == '__main__':
