@@ -16,6 +16,8 @@ def signal_handler(signal, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
+VERSION = '1.4.1'
+
 # colourful messages
 class COL:
 	FAIL = '\033[91m'
@@ -300,8 +302,7 @@ def start():
 		start_cli()
 	else:
 		if args.version:
-			# TODO: new function to print version with new variable on top (#45)
-			print('here be version print')
+			print('logrecorder version %s' % VERSION)
 			sys.exit()
 		if args.info:
 			print('here be print to current log path')
