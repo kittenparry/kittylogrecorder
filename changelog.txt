@@ -1,5 +1,7 @@
 CHANGELOG:
 
+            1.4.1 Colourful messages groundwork.
+(19-11-18)  1.4   Implement argparse instead of manual argument handling.
 (19-07-26)  1.3.4	Start with GUI flag by default on Windows, if no argument is provided.
             1.3.3	Clean up redundant code when setting path and filename.
             1.3.2	Clean up redundant code when joining path and filename and file extension.

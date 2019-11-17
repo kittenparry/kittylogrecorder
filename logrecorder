@@ -16,6 +16,20 @@ def signal_handler(signal, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
+# colourful messages
+class COL:
+	FAIL = '\033[91m'
+	WARNING = '\033[93m'
+	UNDERLINE = '\033[4m'
+	BOLD = '\033[1m'
+	ENDC = '\033[0m'
+	if platform.system() == 'Windows':
+		FAIL = ''
+		WARNING = ''
+		UNDERLINE = ''
+		BOLD = ''
+		ENDC = ''
+
 
 class Gui(tk.Frame):
 
