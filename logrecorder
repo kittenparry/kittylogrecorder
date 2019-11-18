@@ -156,7 +156,7 @@ def create_config():
 		if not os.path.isfile(CONFIG):
 			with open(CONFIG, 'w') as conf:
 				conf.writelines(CONF_CONT % DEF_PATH)
-				print('Config file has been initialised with default logs path set to:\n%s' % DEF_PATH)
+				print('Config file has been initialised.\nDefault logs path set to:\n%s' % DEF_PATH)
 	except IOError as e:
 		prn_err_io(e)
 
