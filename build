@@ -33,7 +33,7 @@ build_dir='builds/'
 
 # exclude certain files and directories from compression
 ignored_dirs=($build_dir extras/ .git/ Other/)
-ignored_files=(build .gitignore README.md)
+ignored_files=(build .gitignore README.md update version.txt)
 cmd_dirs=''
 cmd_files=''
 for dir in "${ignored_dirs[@]}"
