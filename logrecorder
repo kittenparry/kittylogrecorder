@@ -18,6 +18,15 @@ signal.signal(signal.SIGINT, signal_handler)
 
 VERSION = '1.4.1'
 
+# config directory
+if platform.system() == 'Windows':
+	CONFIG_DIR = os.path.expanduser('~\\Documents\\logrecorder')
+	DEF_PATH = os.path.expanduser('~\\logrecorder.logs.txt')
+else: # Darwin & Linux
+	CONFIG_DIR = os.path.expanduser('~/.config/logrecorder')
+	DEF_PATH = os.path.expanduser('~/logrecorder.logs.txt')
+CONFIG = os.path.join(CONFIG_DIR, 'logrecorder.conf')
+
 # colourful messages
 class COL:
 	FAIL = '\033[91m'
@@ -31,6 +40,10 @@ class COL:
 		UNDERLINE = ''
 		BOLD = ''
 		ENDC = ''
+
+# configuration text
+CONF_CONT = '# log=path/to/log\n# Tilde (~) could be used instead of absolute path to home.\n' \
+	'# Check --help to set up from command line.\nlogs=%s\n'
 
 
 class Gui(tk.Frame):
@@ -88,28 +101,6 @@ class Gui(tk.Frame):
 		self.after(333, self.set_time)
 
 
-# a dictionary of strings to hold everything in one place
-dict_strings = {
-	# static
-	'path_config': os.path.join(os.path.expanduser('~'), '.config', 'logrecorder'),
-	'name_config': 'config.logrecorder',
-	# messages
-	'msg_def_conf_create': 'Default config file has been created.',
-	'msg_path_set': '%s has been set to %s.\nFull path is %s',
-	'msg_del_sure': 'Are you sure you want to delete the configuration file? (y/n) ',
-	'msg_del_canc': 'Configuration file deletion is cancelled by user.',
-	'invalid_yn': 'Invalid input. Only enter y or n.',
-	'msg_del_succ': 'Configuration file & folder has been deleted.',
-	'msg_conf_exs': 'Configuration file already does not exist.',
-	# configurable
-	'path_dir': 'Other',
-	'name_filename': 'myLogs',
-}
-
-# returns the string value with given key
-def strings(s):
-	return dict_strings.get(s)
-
 # if on Windows spawns the window to the upper left of the screen
 # else top of the middle
 # note: I don't have access to OS X to see if it looks good or if it works
@@ -130,25 +121,16 @@ def log_record(entry, gui = False):
 		# get path and filename from their respective entries
 		# currently the static values in the strings dictionary
 		data = get_config()
-		path = data[0]
-		file = data[1]
-		# create the directory if it doesn't exist already and inform the user
-		if not os.path.exists(path):
-			os.makedirs(path)
-			if gui:
-				messagebox.showinfo('Directory Created', 'Directory %s has been created.' % path)
-			# print information message to console no matter
-			print('Directory %s has been created.' % path)
+		path = os.path.dirname(data)
+		file = os.path.basename(data) # does this work all the time?
 		
-		# if filename doesn't end in .txt append it
-		# join path & filename
 		file = get_txt_ext(file)
 		log_path = os.path.join(path, file)
 		
 		# format the log output
 		# 2019.03.07 20:30:05| this is a test log.
-		# append it to the log file and clear the text area input
-		log = get_time() + '| ' + str(entry).strip() + ('' if gui else '\n')
+		# append it to the log file
+		log = get_time() + '| ' + str(entry).strip() + '\n'
 		with open(log_path, 'a') as f:
 			f.write(log)
 	except IOError as e:
@@ -165,75 +147,89 @@ def log_record(entry, gui = False):
 def get_time():
 	return time.strftime('%Y.%m.%d %H:%M:%S')
 
-# get path values if config file exists, else get them from the dictionary
+def create_config():
+	"""Config file initialisation with default values."""
+	try:
+		if not os.path.isdir(CONFIG_DIR):
+			os.makedirs(CONFIG_DIR)
+			print('%s has been created.' % CONFIG_DIR)
+		if not os.path.isfile(CONFIG):
+			with open(CONFIG, 'w') as conf:
+				conf.writelines(CONF_CONT % DEF_PATH)
+				print('Config file has been initialised with default logs path set to:\n%s' % DEF_PATH)
+	except IOError as e:
+		prn_err_io(e)
+
 def get_config():
+	"""At launch, read path to logs file from logrecorder.conf."""
 	try:
-		name_config = os.path.join(strings('path_config'), strings('name_config'))
-		if os.path.isfile(name_config):
-			with open(name_config, 'r') as config:
-				data = config.readlines()
-				data[0] = data[0].rstrip()
-				return data
-		else:
-			return [strings('path_dir'), strings('name_filename')]
+		if os.path.isfile(CONFIG):
+			temp = list(filter(None, open(CONFIG).read().split('\n')))
+			for line in temp:
+				if line.startswith('#'):
+					pass
+				else:
+					if line.startswith('logs='):
+						return check_path(line)
+	except FileNotFoundError as e:
+		print('%sERROR%s: logrecorder.conf does not exist, re-run the program with no parameters to create it.\n' \
+		'Or check writing permissions.' % (COL.FAIL, COL.ENDC))
 
-	except IOError as e:
-		prn_err_io(e)
-
-# set path values with CLI options
-def set_config(key, value):
-	name_config = os.path.join(strings('path_config'), strings('name_config'))
-	try:
-		if not os.path.isdir(strings('path_config')):
-			os.makedirs(strings('path_config'))
-		if not os.path.isfile(name_config):
-			with open(name_config, 'w') as config:
-				def_data = '%s\n%s' % (strings('path_dir'), strings('name_filename'))
-				config.writelines(def_data)
-			print(strings('msg_def_conf_create'))
-
-		with open(name_config, 'r') as config:
-			data = config.readlines()
-
-		if key == 'Path':
-			file_name = get_txt_ext(data[1])
-			full_path = os.path.join(value, file_name)
-			data[0] = value + '\n'
-		else: # Filename
-			file_name = get_txt_ext(value)
-			full_path = os.path.join(data[0].rstrip(), file_name)
-			data[1] = value
-
-		with open(name_config, 'w') as config:
-			config.writelines(data)
-		print(strings('msg_path_set') % (key, value, full_path))
-
-	except IOError as e:
-		prn_err_io(e)
-
-def del_config():
-	name_config = os.path.join(strings('path_config'), strings('name_config'))
-	if os.path.isfile(name_config):
-		while True:
-			reply = input(strings('msg_del_sure'))
-			reply = reply.lower()
-			if reply == 'y' or reply == 'yes':
-				break
-			elif reply == 'n' or reply == 'no':
-				print(strings('msg_del_canc'))
-				sys.exit()
-			else:
-				print(strings('invalid_yn'))
+def check_path(line):
+	"""Sterilise path value read from logrecorder.conf in get_config().
+	Removing any leading or trailing whitespace, replace ~ with $HOME if starts with ~.
+	Create directory if it doesn't already exist.
+	
+	keyword args:
+	line -- line of string read from config file that has path information
+	"""
+	input_src = line.replace('logs=', '', 1).strip()
+	if input_src == '':
+		return ''
+	input_src = if_home(input_src)
+	if os.path.isdir(os.path.dirname(input_src)):
+		return input_src
+	else:
 		try:
-			os.unlink(name_config)
-			os.rmdir(strings('path_config'))
-			print(strings('msg_del_succ'))
+			os.makedirs(os.path.dirname(input_src))
+			return input_src
 		except IOError as e:
 			prn_err_io(e)
-	else:
-		print(strings('msg_conf_exs'))
+
+def if_home(val):
+	"""Return replacing ~ with $HOME value if starts with ~, return itself if not.
+	
+	keyword args:
+	val -- path string
+	"""
+	if val.startswith('~'):
+		return val.replace('~', os.path.expanduser('~'), 1)
+	return val
+
+def set_config(logs):
+	"""Change logs file path in logrecorder.conf.
+	
+	keyword args:
+	logs -- string path to logs passed using -p option
+	"""
+	try:
+		if not os.path.isdir(CONFIG_DIR):
+			os.makedirs(CONFIG_DIR)
+			print('%s has been created.' % CONFIG_DIR)
+		with open(CONFIG, 'w') as conf:
+			conf.writelines(CONF_CONT % logs)
+			print('Config file has been edited. Logs path set to:\n%s' % logs)
+
+	except IOError as e:
+		prn_err_io(e)
+
+def get_info():
+	"""Print currently set path to logs file and exit."""
+	print('%sLogs path:%s\t%s' % (COL.BOLD, COL.ENDC, get_config()))
+	sys.exit()
 
 def get_txt_ext(file):
+	"""If filename doesn't end in .txt append it."""
 	return (file + '.txt') if file[len(file)-4:len(file)] != '.txt' else file
 
 def prn_err_io(e):
@@ -242,10 +238,10 @@ def prn_err_io(e):
 
 
 def start_cli():
-	print('Log Recorder')
+	print('Log Recorder v%s\n' % VERSION)
 	# TODO: print info on how to close (ctrl-c) and how to clear if possible
 	while True:
-		entry = input('>>')
+		entry = input('>> ')
 		log_record(entry)
 
 def start_gui():
@@ -278,6 +274,8 @@ def start():
 		type=str)
 
 	args = parser.parse_args()
+	# initialise config file if it doesn't exist
+	create_config()
 	if len(sys.argv) == 1:
 		start_cli()
 	else:
@@ -285,10 +283,9 @@ def start():
 			print('logrecorder version %s' % VERSION)
 			sys.exit()
 		if args.info:
-			print('here be print to current log path')
-			sys.exit()
+			get_info()
 		if args.path:
-			print('log file path edit in config')
+			set_config(args.path)
 		if args.cli and args.gui:
 			print('%sWARNING%s: Cannot combine --gui & --cli. Defaulting to CLI...' % (COL.WARNING, COL.ENDC))
 			start_cli()
