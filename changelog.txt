@@ -1,5 +1,11 @@
 CHANGELOG:
 
+            1.5      Config file path dependent on OS (~/Documents/logrecorder & ~/.config/logrecorder).
+                     One path variable instead of a path and a filename.
+                     Fix? GUI input not outputting a newline to logs file
+                     Initialise the program with config file creation and always read path from there.
+                     Styling to CLI: a space after indicator, version number after title and a newline after version.
+                     Functionality broken in 1.4 should return here.
             1.4.1    Colourful messages groundwork.
 (19-11-18)  1.4      Implement argparse instead of manual argument handling.
 (19-07-26)  1.3.4    Start with GUI flag by default on Windows, if no argument is provided.

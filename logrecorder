@@ -16,7 +16,7 @@ def signal_handler(signal, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-VERSION = '1.4.1'
+VERSION = '1.5'
 
 # config directory
 if platform.system() == 'Windows':
