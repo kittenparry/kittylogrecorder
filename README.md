@@ -20,7 +20,7 @@ $ ./logrecorder --cli # on Windows
 $ ./logrecorder [-h] [-v] [-i] [-c] [-g] [-p PATH]
 
 Write into a designated text file with timestamps. A diary, log keeping
-program if you will.
+program if you will. Check the man page for more help (man logrecorder).
 
 optional arguments:
   -h, --help            show this help message and exit

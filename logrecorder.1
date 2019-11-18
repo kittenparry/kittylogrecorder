@@ -1,20 +1,18 @@
 .
-.TH logrecorder 1 "2019-11-18" "v1.5" "logrecorder man page"
+.TH logrecorder 1 "2019-11-18" "v1.5.2" "logrecorder man page"
 
 .SH NAME
 logrecorder \- simple log keeping program
 
 .SH SYNOPSIS
 .B logrecorder
-.RB [ \-\-path
-.IR directory ]
-.RB [ \-\-file
-.IR filename ]
-.RB [ \-\-del ]
+.RB [ \-\-help ]
+.RB [ \-\-version ]
+.RB [ \-\-info ]
 .RB [ \-\-cli ]
 .RB [ \-\-gui ]
-.RB [ \-\-version ]
-.RB [ \-\-help ]
+.RB [ \-\-path
+.IR path ]
 
 
 .SH DESCRIPTION
@@ -22,28 +20,38 @@ A basic CLI/GUI program which allows you to write into a designated text file wi
 
 .SH OPTIONS
 .TP
-\fB\-p\fR, \fB\-\-path\fR \fIdirectory\fR
-Set and save destination directory to the config file.
-.TP
-\fB\-f\fR, \fB\-\-file\fR \fIfilename\fR
-Set and save target filename to the config file.
-.PP
-Creating the config file will override path values of in\-program dictionary (dict_strings: path_dir, name_filename).
-.TP
-\fB\-d\fR, \fB\-\-del\fR
-Delete the configuration file and folder. A yes/no prompt will be given to the user.
-.TP
-\fB\-c\fR, \fB\-\-cli\fR
-Launch the program in CLI instead of GUI in Windows. When combining with path options, CLI must come last.
-.TP
-\fB\-g\fR, \fB\-\-gui\fR
-Launch the program in GUI instead of CLI. When combining with path options, GUI must come last.
+\fB\-h\fR, \fB\-\-help\fR
+Show help message and exit.
 .TP
 \fB\-v\fR, \fB\-\-version\fR
 Show version information and exit.
 .TP
-\fB\-h\fR, \fB\-\-help\fR
-Show help message and exit.
+\fB\-i\fR, \fB\-\-info\fR
+Print currently set path to logs file and exit.
+.TP
+\fB\-c\fR, \fB\-\-cli\fR
+Launch the program in CLI instead of GUI in Windows.
+.TP
+\fB\-g\fR, \fB\-\-gui\fR
+Launch the program in GUI instead of CLI.
+.TP
+\fB\-p\fR, \fB\-\-path\fR \fIpath\fR
+Set and save logs file path to config file. Tilde (~) could be used instead of $HOME.
+
+.SH DEFAULTS
+Default configuration and logs file paths are as follows:
+
+.SS CONFIG PATH
+.IP Linux:
+.B /home/$USER/.config/logrecorder/
+.IP Windows:
+.B C:/Users/$USER/Documents/logrecorder/
+
+.SS LOGS PATH
+.IP Linux:
+.B /home/$USER/logrecorder.logs.txt
+.IP Windows:
+.B C:/Users/$USER/logrecorder.logs.txt
 
 .SH USAGE
 .TP

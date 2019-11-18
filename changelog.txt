@@ -1,5 +1,7 @@
 CHANGELOG:
 
+            1.5.2    Reference to man page when --help is used.
+            1.5.1    Line break in config initialisation print.
             1.5      Config file path dependent on OS (~/Documents/logrecorder & ~/.config/logrecorder).
                      One path variable instead of a path and a filename.
                      Fix? GUI input not outputting a newline to logs file

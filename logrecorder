@@ -16,7 +16,7 @@ def signal_handler(signal, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-VERSION = '1.5'
+VERSION = '1.5.2'
 
 # config directory
 if platform.system() == 'Windows':
@@ -256,7 +256,7 @@ def start_gui():
 
 
 def start():
-	parser = argparse.ArgumentParser(description='Write into a designated text file with timestamps. A diary, log keeping program if you will.')
+	parser = argparse.ArgumentParser(description='Write into a designated text file with timestamps. A diary, log keeping program if you will. Check the man page for more help (man logrecorder).')
 	parser.add_argument('-v', '--version',
 		help='show version information and exit',
 		action='store_true')
