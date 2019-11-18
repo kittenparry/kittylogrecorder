@@ -172,7 +172,7 @@ def log_record(entry, gui = False):
 		# format the log output
 		# 2019.03.07 20:30:05| this is a test log.
 		# append it to the log file and clear the text area input
-		log = get_time() + '| ' + str(entry) + ('' if gui else '\n')
+		log = get_time() + '| ' + str(entry).strip() + ('' if gui else '\n')
 		with open(log_path, 'a') as f:
 			f.write(log)
 	except IOError as e:
