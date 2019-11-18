@@ -1,7 +1,7 @@
 # Log Recorder
 A basic program which allows you to write into a designated text file with timestamps.
 
-Run `make install` to install the program.
+Download [the latest release](https://github.com/kittenparry/logrecorder/releases/latest), extract its contents and run `make install` to install the program.
 
 ## HOW TO ❓
 * Set path to logs file you want to write into.
