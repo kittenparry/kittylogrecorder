@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# helper function to update version number all around
+# reading from version.txt
+
+ver=$(cat version.txt)
+date=$(date +%Y-%m-%d)
+sed -i "19s/.*/VERSION = '${ver}'/" logrecorder
+sed -i '2s/.*/.TH logrecorder 1 "'${date}'" "v'${ver}'" "logrecorder man page"/' logrecorder.1
